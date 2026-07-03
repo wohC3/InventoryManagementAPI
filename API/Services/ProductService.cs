@@ -1,5 +1,6 @@
 using InventoryManagement.Models;
 using InventoryManagement.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Service;
 
@@ -18,5 +19,16 @@ public class ProductService
     {
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Product>> GetAllProducts()
+    {
+        return await _context.Products.ToListAsync();
+    }
+
+    public async Task<Product?> GetProductById(int id)
+    {
+        var productFound = await _context.Products.FindAsync(id);
+        return productFound;
     }
 }
