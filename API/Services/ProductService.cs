@@ -31,4 +31,16 @@ public class ProductService
         var productFound = await _context.Products.FindAsync(id);
         return productFound;
     }
+
+    public async Task<bool> DeleteProductById(int id)
+    {
+        var productToBeDeleted = await _context.Products.FindAsync(id);
+        if (productToBeDeleted == null)
+        {
+            return false;
+        }
+        _context.Products.Remove(productToBeDeleted);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

@@ -38,4 +38,15 @@ public class ProductsController : ControllerBase
         }
         return Ok(product);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteProductById(int id)
+    {
+        var product = await _service.DeleteProductById(id);
+        if (!product)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
 }
