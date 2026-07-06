@@ -49,4 +49,17 @@ public class ProductsController : ControllerBase
         }
         return NoContent();
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProductById(int id, Product product)
+    {
+        var productToUpdate = await _service.UpdateProductById(id, product);
+        if (productToUpdate == null)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
 }

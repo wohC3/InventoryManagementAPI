@@ -43,4 +43,23 @@ public class ProductService
         await _context.SaveChangesAsync();
         return true;
     }
+
+
+    public async Task<Product?> UpdateProductById(int id, Product product)
+    {
+        var productToBeUpdated = await _context.Products.FindAsync(id);
+
+        if (productToBeUpdated == null)
+        {
+            return null;
+        }
+        productToBeUpdated.Name = product.Name;
+        productToBeUpdated.Quantity = product.Quantity;
+        productToBeUpdated.Price = product.Price;
+
+
+        await _context.SaveChangesAsync();
+        return productToBeUpdated;
+
+    }
 }
