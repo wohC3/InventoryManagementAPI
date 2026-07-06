@@ -57,9 +57,7 @@ public class ProductService
         productToBeUpdated.Quantity = product.Quantity;
         productToBeUpdated.Price = product.Price;
 
-
         await _context.SaveChangesAsync();
         return productToBeUpdated;
-
     }
 }

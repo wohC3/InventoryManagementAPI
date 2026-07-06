@@ -8,7 +8,10 @@ Tech stack:
 
 Features:
 -Add a product with name, quantity and price.
-
+-Get list of all products in the database.
+-Get specific product from database with id.
+-Delete a product with id.
+-Update existing product.
 
 How to run:
 -Use .NET version 8
