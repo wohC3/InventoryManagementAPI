@@ -17,6 +17,14 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Product>> PostProduct(Product product)
     {
+        //Quantity can be 0 to track out of stock products.
+        if (string.IsNullOrWhiteSpace(product.Name) || product.Price <= 0 || product.Quantity < 0)
+        {
+            return BadRequest(new
+            {
+                message = "Validation failed: Name required, Price must be above 0 or Quantity cannot be negative"
+            });
+        }
         await _service.AddProduct(product);
         return Ok(product);
     }
@@ -53,6 +61,19 @@ public class ProductsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProductById(int id, Product product)
     {
+        //Quantity can be 0 to track out of stock products.
+        if (string.IsNullOrWhiteSpace(product.Name) || product.Price <= 0 || product.Quantity < 0)
+        {
+            return BadRequest(new
+            {
+                message = "Validation failed: Name required, Price must be above 0 or Quantity cannot be negative"
+            });
+        }
+        //check for id mismatch.
+        if (id != product.Id)
+        {
+            return BadRequest("The route ID must match the product Id.");
+        }
         var productToUpdate = await _service.UpdateProductById(id, product);
         if (productToUpdate == null)
         {
