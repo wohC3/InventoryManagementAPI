@@ -7,7 +7,7 @@ namespace InventoryManagement.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private ProductService _service;
+    private readonly ProductService _service;
 
     public ProductsController(ProductService service)
     {

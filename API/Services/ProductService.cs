@@ -8,7 +8,7 @@ namespace InventoryManagement.Service;
 public class ProductService
 {
 
-    private AppDbContext _context;
+    private readonly AppDbContext _context;
 
     public ProductService(AppDbContext context)
     {
