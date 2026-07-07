@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=inventory.db"));
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

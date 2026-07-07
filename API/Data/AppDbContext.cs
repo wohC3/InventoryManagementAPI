@@ -10,4 +10,5 @@ public class AppDbContext : DbContext
 
     // = null! to fix nullable warning
     public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 }
