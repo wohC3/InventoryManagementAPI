@@ -2,7 +2,7 @@
 Demo/learning project for inventory management REST API. 
 
 Tech stack:
--ASP .NET Core
+-ASP.NET Core
 -EF Core
 -Sqlite
 -Bcrypt.Net-Next (password hashing)
@@ -13,6 +13,8 @@ Features:
 -Get specific product from database with id.
 -Delete a product with id.
 -Update existing product.
+-Register users with username and password.
+-Store passwords securely using BCrypt hashing.
 
 How to run:
 -Use .NET version 8
