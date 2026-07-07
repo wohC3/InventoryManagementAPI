@@ -5,6 +5,7 @@ Tech stack:
 -ASP .NET Core
 -EF Core
 -Sqlite
+-Bcrypt.Net-Next (password hashing)
 
 Features:
 -Add a product with name, quantity and price.
