@@ -37,5 +37,25 @@ public class AuthService
         return true;
     }
 
+    public async Task<User?> Login(string username, string password)
+    {
+
+        var userFound = await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
+
+        if (userFound == null)
+        {
+            return null;
+        }
+
+        var isValid = BCrypt.Net.BCrypt.Verify(password, userFound.PasswordHash);
+
+        if (!isValid)
+        {
+            return null;
+        }
+
+        return userFound;
+    }
+
 }
 

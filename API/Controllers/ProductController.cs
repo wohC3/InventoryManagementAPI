@@ -1,6 +1,7 @@
 using InventoryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagement.Service;
+using Microsoft.AspNetCore.Authorization;
 namespace InventoryManagement.Controllers;
 
 [Route("api/[controller]")]
@@ -13,7 +14,7 @@ public class ProductsController : ControllerBase
     {
         _service = service;
     }
-
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Product>> PostProduct(Product product)
     {
@@ -46,7 +47,7 @@ public class ProductsController : ControllerBase
         }
         return Ok(product);
     }
-
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProductById(int id)
     {
@@ -57,7 +58,7 @@ public class ProductsController : ControllerBase
         }
         return NoContent();
     }
-
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProductById(int id, Product product)
     {
