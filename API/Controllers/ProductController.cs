@@ -47,7 +47,7 @@ public class ProductsController : ControllerBase
         }
         return Ok(product);
     }
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProductById(int id)
     {
