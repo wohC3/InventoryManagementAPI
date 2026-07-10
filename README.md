@@ -16,6 +16,8 @@ Features:
 -Delete a product with id.
 -Update existing product.
 -Product validation.
+-Get list of all users.
+-Update user's role by id.
 
 Authentication:
 -Register users with username and password.
@@ -23,6 +25,11 @@ Authentication:
 -Login users using username and password.
 -Generate JWT authentication tokens.
 -Protect API endpoints using JWT Bearer authentication.
+-Role authorization for endpoints.
+
+Authorization:
+-Only Admin can view all users and update user roles.
+-Regular User can't access admin-only endpoints.
 
 How to run:
 -Use .NET version 8
