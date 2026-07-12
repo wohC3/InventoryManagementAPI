@@ -1,6 +1,7 @@
 using InventoryManagement.Models;
 using InventoryManagement.Data;
 using Microsoft.EntityFrameworkCore;
+using InventoryManagement.Dtos;
 
 namespace InventoryManagement.Service;
 
@@ -15,10 +16,17 @@ public class ProductService
         _context = context;
     }
 
-    public async Task AddProduct(Product product)
+    public async Task<Product> AddProduct(CreateProductDto productDto)
     {
+        var product = new Product
+        {
+            Name = productDto.Name,
+            Quantity = productDto.Quantity,
+            Price = productDto.Price
+        };
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
+        return product;
     }
 
     public async Task<List<Product>> GetAllProducts()
@@ -45,7 +53,7 @@ public class ProductService
     }
 
 
-    public async Task<Product?> UpdateProductById(int id, Product product)
+    public async Task<Product?> UpdateProductById(int id, UpdateProductDto productDto)
     {
         var productToBeUpdated = await _context.Products.FindAsync(id);
 
@@ -53,9 +61,9 @@ public class ProductService
         {
             return null;
         }
-        productToBeUpdated.Name = product.Name;
-        productToBeUpdated.Quantity = product.Quantity;
-        productToBeUpdated.Price = product.Price;
+        productToBeUpdated.Name = productDto.Name;
+        productToBeUpdated.Quantity = productDto.Quantity;
+        productToBeUpdated.Price = productDto.Price;
 
         await _context.SaveChangesAsync();
         return productToBeUpdated;

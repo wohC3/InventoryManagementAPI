@@ -2,6 +2,7 @@ using InventoryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagement.Service;
 using Microsoft.AspNetCore.Authorization;
+using InventoryManagement.Dtos;
 namespace InventoryManagement.Controllers;
 
 [Route("api/[controller]")]
@@ -16,18 +17,18 @@ public class ProductsController : ControllerBase
     }
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Product>> PostProduct(Product product)
+    public async Task<ActionResult<Product>> PostProduct(CreateProductDto productDto)
     {
         //Quantity can be 0 to track out of stock products.
-        if (string.IsNullOrWhiteSpace(product.Name) || product.Price <= 0 || product.Quantity < 0)
+        if (string.IsNullOrWhiteSpace(productDto.Name) || productDto.Price <= 0 || productDto.Quantity < 0)
         {
             return BadRequest(new
             {
                 message = "Validation failed: Name required, Price must be above 0 or Quantity cannot be negative"
             });
         }
-        await _service.AddProduct(product);
-        return Ok(product);
+        var createdProduct = await _service.AddProduct(productDto);
+        return Ok(createdProduct);
     }
 
     [HttpGet]
@@ -60,23 +61,18 @@ public class ProductsController : ControllerBase
     }
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProductById(int id, Product product)
+    public async Task<IActionResult> UpdateProductById(int id, UpdateProductDto productDto)
     {
         //Quantity can be 0 to track out of stock products.
-        if (string.IsNullOrWhiteSpace(product.Name) || product.Price <= 0 || product.Quantity < 0)
+        if (string.IsNullOrWhiteSpace(productDto.Name) || productDto.Price <= 0 || productDto.Quantity < 0)
         {
             return BadRequest(new
             {
                 message = "Validation failed: Name required, Price must be above 0 or Quantity cannot be negative"
             });
         }
-        //check for id mismatch.
-        if (id != product.Id)
-        {
-            return BadRequest("The route ID must match the product Id.");
-        }
-        var productToUpdate = await _service.UpdateProductById(id, product);
-        if (productToUpdate == null)
+        var updatedProduct = await _service.UpdateProductById(id, productDto);
+        if (updatedProduct == null)
         {
             return NotFound();
         }
