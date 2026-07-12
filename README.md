@@ -31,6 +31,12 @@ Authorization:
 -Only Admin can view all users and update user roles.
 -Regular User can't access admin-only endpoints.
 
+Architecture:
+-Service layer pattern for business logic.
+-DTOs used for separating API models from database entities.
+-Data Annotations used for request validation.
+-Entity Framework Core used for database access.
+
 How to run:
 -Use .NET version 8
 -in bash dotnet run
