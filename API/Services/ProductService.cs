@@ -16,17 +16,25 @@ public class ProductService
         _context = context;
     }
 
-    public async Task<Product> AddProduct(CreateProductDto productDto)
+    public async Task<ProductDto> AddProduct(CreateProductDto createProductDto)
     {
         var product = new Product
         {
-            Name = productDto.Name,
-            Quantity = productDto.Quantity,
-            Price = productDto.Price
+            Name = createProductDto.Name,
+            Quantity = createProductDto.Quantity,
+            Price = createProductDto.Price
         };
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
-        return product;
+        //after savechangesasync the Id exists so we map product -> productDto.
+        var result = new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Quantity = product.Quantity,
+            Price = product.Price
+        };
+        return result;
     }
 
     public async Task<PageProductDto> GetAllProducts(int page, int pageSize)
@@ -40,22 +48,40 @@ public class ProductService
         var totalItems = await _context.Products.CountAsync();
         // Round up to include a final page when remaining products don't fill a full page.
         var totalPages = (totalItems + pageSize - 1) / pageSize;
-        var productsDto = new PageProductDto
+        var productDtos = products.Select(product => new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Quantity = product.Quantity,
+            Price = product.Price
+        }).ToList();
+        var pageProductsDto = new PageProductDto
         {
             Page = page,
             PageSize = pageSize,
             TotalItems = totalItems,
             TotalPages = totalPages,
-            Products = products
+            Products = productDtos
         };
 
-        return productsDto;
+        return pageProductsDto;
     }
 
-    public async Task<Product?> GetProductById(int id)
+    public async Task<ProductDto?> GetProductById(int id)
     {
         var productFound = await _context.Products.FindAsync(id);
-        return productFound;
+        if (productFound == null)
+        {
+            return null;
+        }
+        var result = new ProductDto
+        {
+            Id = productFound.Id,
+            Name = productFound.Name,
+            Quantity = productFound.Quantity,
+            Price = productFound.Price
+        };
+        return result;
     }
 
     public async Task<bool> DeleteProductById(int id)
@@ -71,7 +97,7 @@ public class ProductService
     }
 
 
-    public async Task<Product?> UpdateProductById(int id, UpdateProductDto productDto)
+    public async Task<ProductDto?> UpdateProductById(int id, UpdateProductDto productDto)
     {
         var productToBeUpdated = await _context.Products.FindAsync(id);
 
@@ -82,8 +108,14 @@ public class ProductService
         productToBeUpdated.Name = productDto.Name;
         productToBeUpdated.Quantity = productDto.Quantity;
         productToBeUpdated.Price = productDto.Price;
-
         await _context.SaveChangesAsync();
-        return productToBeUpdated;
+        var result = new ProductDto
+        {
+            Id = productToBeUpdated.Id,
+            Name = productToBeUpdated.Name,
+            Quantity = productToBeUpdated.Quantity,
+            Price = productToBeUpdated.Price
+        };
+        return result;
     }
 }

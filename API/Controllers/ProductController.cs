@@ -17,7 +17,7 @@ public class ProductsController : ControllerBase
     }
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Product>> PostProduct(CreateProductDto productDto)
+    public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto productDto)
     {
         var createdProduct = await _service.AddProduct(productDto);
         return Ok(createdProduct);
@@ -49,7 +49,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Product>> GetProductById(int id)
+    public async Task<ActionResult<ProductDto>> GetProductById(int id)
     {
         var product = await _service.GetProductById(id);
         if (product == null)
@@ -71,7 +71,7 @@ public class ProductsController : ControllerBase
     }
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProductById(int id, UpdateProductDto productDto)
+    public async Task<ActionResult<ProductDto>> UpdateProductById(int id, UpdateProductDto productDto)
     {
         var updatedProduct = await _service.UpdateProductById(id, productDto);
         if (updatedProduct == null)
@@ -79,7 +79,7 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
 
-        return NoContent();
+        return Ok(updatedProduct);
     }
 
 }

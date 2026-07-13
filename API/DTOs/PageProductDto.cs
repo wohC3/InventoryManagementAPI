@@ -12,5 +12,5 @@ public class PageProductDto
 
     public int TotalPages { get; set; }
 
-    public List<Product> Products { get; set; } = [];
+    public List<ProductDto> Products { get; set; } = [];
 }
