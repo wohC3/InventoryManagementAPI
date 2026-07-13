@@ -24,9 +24,27 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetProducts()
+    public async Task<IActionResult> GetProducts(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+        )
     {
-        var listOfProducts = await _service.GetAllProducts();
+        if (page < 1)
+        {
+            return BadRequest(new
+            {
+                message = "Pages cannot be 0 or negative!"
+            });
+        }
+        if (pageSize < 1 || pageSize > 10)
+        {
+
+            return BadRequest(new
+            {
+                message = "Pagesize must be in range 1-10!"
+            });
+        }
+        var listOfProducts = await _service.GetAllProducts(page, pageSize);
         return Ok(listOfProducts);
     }
 

@@ -29,9 +29,27 @@ public class ProductService
         return product;
     }
 
-    public async Task<List<Product>> GetAllProducts()
+    public async Task<PageProductDto> GetAllProducts(int page, int pageSize)
     {
-        return await _context.Products.ToListAsync();
+        var products = await _context.Products
+          .OrderBy(p => p.Id)
+          .Skip((page - 1) * pageSize)
+          .Take(pageSize)
+          .ToListAsync();
+
+        var totalItems = await _context.Products.CountAsync();
+        // Round up to include a final page when remaining products don't fill a full page.
+        var totalPages = (totalItems + pageSize - 1) / pageSize;
+        var productsDto = new PageProductDto
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = totalItems,
+            TotalPages = totalPages,
+            Products = products
+        };
+
+        return productsDto;
     }
 
     public async Task<Product?> GetProductById(int id)
