@@ -4,10 +4,12 @@ Demo/learning project for inventory management REST API.
 Tech stack:
 -ASP.NET Core
 -EF Core
--Sqlite
+-SQLite
 -Bcrypt.Net-Next (password hashing)
 -JWT Bearer Authentication
 -Swagger/OpenAPI
+-XUnit
+-SQLite InMemory (testing)
 
 Features:
 -Add a product with name, quantity and price.
@@ -36,6 +38,24 @@ Architecture:
 -DTOs used for separating API models from database entities.
 -Data Annotations used for request validation.
 -Entity Framework Core used for database access.
+
+Testing:
+Service-layer unit tests using:
+-XUnit
+-SQLite InMemory
+-Entity Framework Core
+
+Current Coverage:
+-AddProduct
+-GetProductById
+-GetAllProducts (pagination)
+-UpdateProductById
+-DeleteProductById
+
+Run the tests:
+in bash:
+cd API.Tests
+dotnet test
 
 How to run:
 -Use .NET version 8
