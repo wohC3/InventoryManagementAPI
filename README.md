@@ -46,11 +46,19 @@ Service-layer unit tests using:
 -Entity Framework Core
 
 Current Coverage:
--AddProduct
--GetProductById
--GetAllProducts (pagination)
--UpdateProductById
--DeleteProductById
+ProductService:
+	-AddProduct
+	-GetProductById
+	-GetAllProducts (pagination)
+	-UpdateProductById
+	-DeleteProductById
+UserService:
+	-GetAllUsers
+	-UpdateUserRole
+AuthService:
+	-Register
+	-Login
+
 
 Run the tests:
 in bash:
