@@ -86,7 +86,7 @@ public class ProductServiceTests
     }
 
     [Fact]
-    public async Task GetAllProducts_ShouldReturnPagegedProducts_WhenProductsExist()
+    public async Task GetAllProducts_ShouldReturnPagedProducts_WhenProductsExist()
     {
         //MANUAL APPDBCONTEXT DI
         //await using var to dispose of connection.
