@@ -1,8 +1,8 @@
-using InventoryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
-using InventoryManagement.Service;
 using Microsoft.AspNetCore.Authorization;
 using InventoryManagement.Dtos;
+using InventoryManagement.Interfaces;
+
 namespace InventoryManagement.Controllers;
 
 
@@ -10,9 +10,9 @@ namespace InventoryManagement.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly UserService _service;
+    private readonly IUserService _service;
 
-    public UsersController(UserService service)
+    public UsersController(IUserService service)
     {
         _service = service;
     }

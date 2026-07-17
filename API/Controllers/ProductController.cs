@@ -1,17 +1,17 @@
-using InventoryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
-using InventoryManagement.Service;
 using Microsoft.AspNetCore.Authorization;
 using InventoryManagement.Dtos;
+using InventoryManagement.Interfaces;
+
 namespace InventoryManagement.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly ProductService _service;
+    private readonly IProductService _service;
 
-    public ProductsController(ProductService service)
+    public ProductsController(IProductService service)
     {
         _service = service;
     }

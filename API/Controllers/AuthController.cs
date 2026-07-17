@@ -1,10 +1,11 @@
-using InventoryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagement.Service;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using InventoryManagement.Interfaces;
+
 namespace InventoryManagement.Controllers;
 
 
@@ -14,11 +15,11 @@ namespace InventoryManagement.Controllers;
 public class AuthController : ControllerBase
 {
 
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
     private readonly IConfiguration _configuration;
 
 
-    public AuthController(AuthService service, IConfiguration iconf)
+    public AuthController(IAuthService service, IConfiguration iconf)
     {
         _authService = service;
         _configuration = iconf;

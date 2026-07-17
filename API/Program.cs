@@ -1,13 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using InventoryManagement.Models;
 using InventoryManagement.Data;
 using InventoryManagement.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using InventoryManagement.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,9 +43,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=inventory.db"));
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
   .AddJwtBearer(options =>

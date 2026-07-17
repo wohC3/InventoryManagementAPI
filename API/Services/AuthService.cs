@@ -1,13 +1,12 @@
-
 using InventoryManagement.Models;
 using InventoryManagement.Data;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
+using InventoryManagement.Interfaces;
 
 namespace InventoryManagement.Service;
 
 
-public class AuthService
+public class AuthService : IAuthService
 {
 
     private readonly AppDbContext _context;

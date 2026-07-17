@@ -2,11 +2,12 @@ using InventoryManagement.Models;
 using InventoryManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using InventoryManagement.Dtos;
+using InventoryManagement.Interfaces;
 
 namespace InventoryManagement.Service;
 
 
-public class ProductService
+public class ProductService : IProductService
 {
 
     private readonly AppDbContext _context;
