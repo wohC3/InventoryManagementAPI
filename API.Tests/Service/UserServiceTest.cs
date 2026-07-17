@@ -1,10 +1,8 @@
 using InventoryManagement.Service;
-using InventoryManagement.Data;
 using InventoryManagement.Dtos;
 using InventoryManagement.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
-using Xunit;
+using API.Tests.Helpers;
 
 namespace API.Tests.Service;
 
@@ -13,18 +11,8 @@ public class UserServiceTest
     [Fact]
     public async Task UpdateUserRole_ShouldUpdateUserRole_WhenUserExists()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-
-        var service = new UserService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new UserService(db.Context);
 
         var user = new User
         {
@@ -33,8 +21,8 @@ public class UserServiceTest
             Role = "User"
         };
 
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+        db.Context.Users.Add(user);
+        await db.Context.SaveChangesAsync();
 
         var dto = new UpdateUserRoleDto
         {
@@ -48,7 +36,7 @@ public class UserServiceTest
         Assert.Equal("Bob", result.Username);
         Assert.Equal("Admin", result.Role);
 
-        var savedUser = await context.Users.FindAsync(result.Id);
+        var savedUser = await db.Context.Users.FindAsync(result.Id);
         Assert.NotNull(savedUser);
         Assert.Equal("Bob", savedUser.Username);
         Assert.Equal("Admin", savedUser.Role);
@@ -59,18 +47,8 @@ public class UserServiceTest
     [Fact]
     public async Task UpdateUserRole_ShouldReturnNull_WhenUserDoesNotExist()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-
-        var service = new UserService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new UserService(db.Context);
 
         var dto = new UpdateUserRoleDto
         {
@@ -81,25 +59,15 @@ public class UserServiceTest
 
         Assert.Null(result);
         //check for accidental user creation.
-        Assert.Equal(0, await context.Users.CountAsync());
+        Assert.Equal(0, await db.Context.Users.CountAsync());
     }
 
 
     [Fact]
     public async Task GetAllUsers_ShouldReturnUsersList_WhenUsersExist()
     {
-        //MANUAL APPDBCONTEXT DI
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new UserService(context);
-        //MANUAL APPDBCONTEXT DI
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new UserService(db.Context);
 
         for (int i = 1; i < 6; i++)
         {
@@ -109,13 +77,13 @@ public class UserServiceTest
                 PasswordHash = "PasswordHash",
                 Role = "User"
             };
-            context.Users.Add(user);
+            await db.Context.Users.AddAsync(user);
         }
-        await context.SaveChangesAsync();
+        await db.Context.SaveChangesAsync();
         var result = await service.GetAllUsers();
 
         Assert.NotNull(result);
-        Assert.Equal(5, await context.Users.CountAsync());
+        Assert.Equal(5, await db.Context.Users.CountAsync());
         //user1 
         Assert.Equal("User1", result[0].Username);
         Assert.Equal("User", result[0].Role);
@@ -128,18 +96,8 @@ public class UserServiceTest
     [Fact]
     public async Task GetAllUsers_ShouldReturnEmptyList_WhenUsersDoNotExist()
     {
-        //MANUAL APPDBCONTEXT DI
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new UserService(context);
-        //MANUAL APPDBCONTEXT DI
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new UserService(db.Context);
 
         var result = await service.GetAllUsers();
 
@@ -147,6 +105,4 @@ public class UserServiceTest
         //for empty list return.
         Assert.Empty(result);
     }
-
-
 }

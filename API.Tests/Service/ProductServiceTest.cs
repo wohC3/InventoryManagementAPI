@@ -1,10 +1,7 @@
 using InventoryManagement.Service;
-using InventoryManagement.Data;
 using InventoryManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
-using Xunit;
-
+using API.Tests.Helpers;
 
 namespace API.Tests.Service;
 
@@ -13,18 +10,9 @@ public class ProductServiceTests
     [Fact]
     public async Task AddProduct_ShouldCreateProduct_WhenValidDataIsProvided()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
 
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-
-        var service = new ProductService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var dto = new CreateProductDto
         {
@@ -42,7 +30,7 @@ public class ProductServiceTests
         Assert.Equal(299.99m, result.Price);
         Assert.True(result.Id > 0);
 
-        var savedProduct = await context.Products.FirstOrDefaultAsync();
+        var savedProduct = await db.Context.Products.FirstOrDefaultAsync();
         Assert.NotNull(savedProduct);
         Assert.Equal("Phone", savedProduct.Name);
         Assert.Equal(1, savedProduct.Quantity);
@@ -53,19 +41,9 @@ public class ProductServiceTests
     [Fact]
     public async Task GetProductById_ShouldReturnProductById_WhenValidIdIsProvided()
     {
-        //MANUAL APPDBCONTEXT DI
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new ProductService(context);
-        //MANUAL APPDBCONTEXT DI
 
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var dto = new CreateProductDto
         {
@@ -88,18 +66,9 @@ public class ProductServiceTests
     [Fact]
     public async Task GetAllProducts_ShouldReturnPagedProducts_WhenProductsExist()
     {
-        //MANUAL APPDBCONTEXT DI
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new ProductService(context);
-        //MANUAL APPDBCONTEXT DI
+
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         for (int i = 1; i < 6; i++)
         {
@@ -117,10 +86,10 @@ public class ProductServiceTests
 
         Assert.NotNull(pageResult);
 
-        Assert.Equal(pageResult.Page, 2);
-        Assert.Equal(pageResult.PageSize, 2);
-        Assert.Equal(pageResult.TotalItems, 5);
-        Assert.Equal(pageResult.TotalPages, 3);
+        Assert.Equal(2, pageResult.Page);
+        Assert.Equal(2, pageResult.PageSize);
+        Assert.Equal(5, pageResult.TotalItems);
+        Assert.Equal(3, pageResult.TotalPages);
 
         //phone 3 
         Assert.Equal("Phone3", pageResult.Products[0].Name);
@@ -136,18 +105,8 @@ public class ProductServiceTests
     [Fact]
     public async Task UpdateProductById_ShouldUpdateProduct_WhenProductExists()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-
-        var service = new ProductService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var dto = new CreateProductDto
         {
@@ -172,7 +131,7 @@ public class ProductServiceTests
         Assert.Equal(2, result.Quantity);
         Assert.Equal(300.99m, result.Price);
 
-        var savedProduct = await context.Products.FindAsync(result.Id);
+        var savedProduct = await db.Context.Products.FindAsync(result.Id);
         Assert.NotNull(savedProduct);
         Assert.Equal("PhoneUpdated", savedProduct.Name);
         Assert.Equal(2, savedProduct.Quantity);
@@ -184,16 +143,8 @@ public class ProductServiceTests
     [Fact]
     public async Task DeleteProduct_ShouldDeleteProduct_WhenProductExists()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new ProductService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var dto = new CreateProductDto
         {
@@ -209,7 +160,7 @@ public class ProductServiceTests
 
         Assert.True(result);
 
-        var deletedProduct = await context.Products.FindAsync(createdProduct.Id);
+        var deletedProduct = await db.Context.Products.FindAsync(createdProduct.Id);
         Assert.Null(deletedProduct);
     }
 
@@ -217,18 +168,9 @@ public class ProductServiceTests
     [Fact]
     public async Task GetProductById_ShouldReturnNull_WhenProductDoesNotExist()
     {
-        //MANUAL APPDBCONTEXT DI
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new ProductService(context);
-        //MANUAL APPDBCONTEXT DI
+
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var nonExistingId = 1;
         var foundProductById = await service.GetProductById(nonExistingId);
@@ -239,18 +181,8 @@ public class ProductServiceTests
     [Fact]
     public async Task UpdateProductById_ShouldReturnNull_WhenProductDoesNotExist()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-
-        var service = new ProductService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var nonExistingId = 1;
         var result = await service.UpdateProductById(nonExistingId,
@@ -262,7 +194,7 @@ public class ProductServiceTests
             });
 
         Assert.Null(result);
-        var savedProduct = await context.Products.FindAsync(nonExistingId);
+        var savedProduct = await db.Context.Products.FindAsync(nonExistingId);
         Assert.Null(savedProduct);
 
     }
@@ -271,16 +203,8 @@ public class ProductServiceTests
     [Fact]
     public async Task DeleteProduct_ShouldReturnFalse_WhenProductDoesNotExist()
     {
-        //await using var to dispose of connection.
-        await using var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync();
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-          .UseSqlite(connection)
-          .Options;
-        //again await using var to dispose of context.
-        await using var context = new AppDbContext(options);
-        await context.Database.EnsureCreatedAsync();
-        var service = new ProductService(context);
+        await using var db = await TestDatabase.CreateAsync();
+        var service = new ProductService(db.Context);
 
         var nonExistingId = 1;
 
