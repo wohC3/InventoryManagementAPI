@@ -10,6 +10,7 @@ Tech stack:
 -Swagger/OpenAPI
 -XUnit
 -SQLite InMemory (testing)
+-Moq (testing)
 
 Features:
 -Add a product with name, quantity and price.
@@ -59,6 +60,20 @@ AuthService:
 	-Register
 	-Login
 
+Controller-layer unit tests using:
+-XUnit
+-Moq
+-ASP.NET Core MVC testing types
+
+Controllers are tested using mocked service interfaces.
+
+Current Coverage:
+ProductController:
+	-GetProductById
+	-GetProducts
+	-PostProduct
+	-UpdateProductById
+	-DeleteProductById
 
 Run the tests:
 in bash:
