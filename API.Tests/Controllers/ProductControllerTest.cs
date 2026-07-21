@@ -97,7 +97,7 @@ public class ProductControllerTest
         Assert.Equal(2, response.PageSize);
         Assert.Equal(5, response.TotalItems);
         Assert.Equal(3, response.TotalPages);
-        Assert.Equal(5, items.Count);
+        Assert.Equal(5, response.Products.Count);
         //checks if service was called
         _mockService.Verify(s => s.GetAllProducts(2, 2), Times.Once());
     }
