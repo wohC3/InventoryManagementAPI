@@ -77,6 +77,9 @@ ProductController:
 UsersController:
 	-UpdateUserRoleById
 	-GetUsers
+AuthController:
+	-Register
+	-Login
 
 Run the tests:
 in bash:
