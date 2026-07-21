@@ -74,6 +74,9 @@ ProductController:
 	-PostProduct
 	-UpdateProductById
 	-DeleteProductById
+UsersController:
+	-UpdateUserRoleById
+	-GetUsers
 
 Run the tests:
 in bash:
